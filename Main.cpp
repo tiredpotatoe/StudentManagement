@@ -1,4 +1,4 @@
-    #include <iostream>
+#include <iostream>
     #include <vector>
     #include <algorithm>
     #include <limits>
@@ -13,8 +13,6 @@
         float grade;
     };
 
-    /*************************************************************************** */
-
     struct Student {
         string firstName, lastName;
         string studentID;
@@ -28,7 +26,63 @@
     vector<Student> students;
 
     /*************************************************************************** */
+    
+    void registerStudent();
+    void addCourse();
+    void listStudents(string majorFilter );
+    void printTranscript();
+    void deleteStudent();
+    void searchStudent();
 
+    /*************************************************************************** */
+
+    int main() {
+        int choice;
+        //for some reason the thingies dont pop up so ima add a cin and check if the probram even starts or not
+        cout << "Starting program...\n";
+
+        do {
+            cout << "\n1. Register Student\n2. Add Course\n3. List Students\n4. Print Transcript(results paper)\n5. Delete Student\n6. Search Student\n7. Exit\nOption: ";
+            // cin >> choice;
+            
+            //update
+            //when uh the user puts anything beside 1-6 it makes a weird loop so i wanted to add an if statement but i used .clear()
+            if (!(cin >> choice)) { 
+            cin.clear();  // Clears error flag
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Discards invalid input
+            cout << "\nInvalid input! Please select an option.\n";
+            continue;
+            } 
+            //update this somehow fucks up the program ima see why //nvm im stupid i put cin>>choice twice
+
+            switch (choice) {
+                case 1: registerStudent(); break;
+                case 2: addCourse(); break;
+                case 3: {
+                    string major;
+                    cout << "\nEnter major to filter (or press enter to list all): ";
+
+                    // cin.ignore();
+                    // getline(cin, major);
+                    //update cin.ignore has a problem it like only removes one char and doesnt fully clear the uh buffer or whatever
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    getline(cin, major);
+
+                    listStudents(major);
+                    break;
+                }
+                case 4: printTranscript(); break;
+                case 5: deleteStudent(); break;
+                case 6: searchStudent(); break;
+                case 7: cout << "\nExiting...\n"; break;
+                default: cout << "\nInvalid choice!\n";
+            }
+        } while (choice != 7);
+        return 0;
+    }
+
+    //--------------------------------------------------------------------------------------
+    
     void registerStudent() {
         Student s;
 
@@ -49,7 +103,7 @@
         cout << "Student registered successfully!\n";
     }
 
-    /*************************************************************************** */
+    //------------------------------------------------------------------------------------------
 
     // void addCourse() {
     //     string id;
@@ -205,50 +259,32 @@
         }
     }
 
-    /*************************************************************************** */
+    /***************************************************************************************************** */
 
-    int main() {
-        int choice;
-        //for some reason the thingies dont pop up so ima add a cin and check if the probram even starts or not
-        cout << "Starting program...\n";
+    void searchStudent() {
+    string query;
+    cout << "\nEnter student name or ID to search: ";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+    getline(cin, query);
 
-        do {
-            cout << "\n1. Register Student\n2. Add Course\n3. List Students\n4. Print Transcript(results paper)\n5. Delete Student\n6. Exit\nOption: ";
-            // cin >> choice;
-            
-            //update
-            //when uh the user puts anything beside 1-6 it makes a weird loop so i wanted to add an if statement but i used .clear()
-            if (!(cin >> choice)) { 
-            cin.clear();  // Clears error flag
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Discards invalid input
-            cout << "\nInvalid input! Please select an option.\n";
-            continue;
-            } 
-            //update this somehow fucks up the program ima see why //nvm im stupid i put cin>>choice twice
-
-            switch (choice) {
-                case 1: registerStudent(); break;
-                case 2: addCourse(); break;
-                case 3: {
-                    string major;
-                    cout << "\nEnter major to filter (or press enter to list all): ";
-
-                    // cin.ignore();
-                    // getline(cin, major);
-                    //update cin.ignore has a problem it like only removes one char and doesnt fully clear the uh buffer or whatever
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    getline(cin, major);
-
-                    listStudents(major);
-                    break;
-                }
-                case 4: printTranscript(); break;
-                case 5: deleteStudent(); break;
-                case 6: cout << "\nExiting...\n"; break;
-                default: cout << "\nInvalid choice!\n";
+    bool found = false;
+    for (const auto &s : students) {
+        if (s.firstName == query || s.lastName == query || s.studentID == query) {
+            cout << "\nStudent Found:\n";
+            cout << "Name: " << s.firstName << " " << s.lastName << "\n";
+            cout << "Student ID: " << s.studentID << "\n";
+            cout << "Major: " << s.major << "\n";
+            cout << "GPA: " << s.gpa << "\n";
+            cout << "Courses: \n";
+            for (const auto &c : s.courses) {
+                cout << "- " << c.name << " (" << c.credits << " credits) | Grade: " << c.grade << "\n";
             }
-        } while (choice != 6);
-        return 0;
+            found = true;
+        }
     }
 
-    /*************************************************************************** */
+    if (!found) {
+        cout << "No matching student found!\n";
+    }
+}
+
