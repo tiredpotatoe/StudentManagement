@@ -33,6 +33,7 @@
     void printTranscript();
     void deleteStudent();
     void searchStudent();
+    void editStudentInfo();
 
     /*************************************************************************** */
 
@@ -42,7 +43,7 @@
         cout << "Starting program...\n";
 
         do {
-            cout << "\n1. Register Student\n2. Add Course\n3. List Students\n4. Print Transcript(results paper)\n5. Delete Student\n6. Search Student\n7. Exit\nOption: ";
+            cout << "\n1. Register Student\n2. Add Course\n3. List Students\n4. Print Transcript(results paper)\n5. Delete Student\n6. Search Student\n7. Edit student Info\n8. Exit\n\nOption: ";
             // cin >> choice;
             
             //update
@@ -73,11 +74,11 @@
                 }
                 case 4: printTranscript(); break;
                 case 5: deleteStudent(); break;
-                case 6: searchStudent(); break;
-                case 7: cout << "\nExiting...\n"; break;
-                default: cout << "\nInvalid choice!\n";
+                case 7: editStudentInfo(); break;
+                case 8: cout << "\nExiting...\n"; break;
+                default: cout << "\nInvalid option!\n";
             }
-        } while (choice != 7);
+        } while (choice != 8);
         return 0;
     }
 
@@ -135,43 +136,182 @@
     //     cout << "Student not found!\n";
     // }
     //update
-    void addCourse() {
-        string id;
-        cout << "Enter student ID: "; cin >> id;
+    // void addCourse() {
+    //     string id;
+    //     cout << "Enter student ID: "; cin >> id;
 
-        for (auto &s : students) {
-            if (s.studentID == id) {
-                int numCourses;
-                cout << "How many courses do you want to add? ";  
+    //     for (auto &s : students) {
+    //         if (s.studentID == id) {
+    //             int numCourses;
+    //             cout << "How many courses do you want to add? ";  
                 
-                while (!(cin >> numCourses) || numCourses <= 0) {
-                    cin.clear(); 
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-                    cout << "Invalid number! Please enter a positive integer: ";
+    //             while (!(cin >> numCourses) || numCourses <= 0) {
+    //                 cin.clear(); 
+    //                 cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+    //                 cout << "Invalid number! Please enter a positive integer: ";
+    //             }
+
+    //             for (int i = 0; i < numCourses; i++) {
+    //                 Course c;
+    //                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    
+    //                 cout << "\nEnter course #" << (i + 1) << " name: "; 
+    //                 getline(cin, c.name);
+                    
+    //                 cout << "Enter credits (vahed dars): ";
+    //                 while (!(cin >> c.credits) || c.credits <= 0) {
+    //                     cin.clear();
+    //                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    //                     cout << "Invalid credits! Please enter a positive integer: ";
+    //                 }
+
+    //                 cout << "Enter grade: ";
+    //                 while (!(cin >> c.grade) || c.grade < 0 || c.grade > 20) { 
+    //                     cin.clear();
+    //                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    //                     cout << "Invalid grade! Please enter a value between 0 and 20: ";
+    //                 }
+
+    //                 s.courses.push_back(c);
+    //             }
+
+    //             float totalGrade = 0, totalCredits = 0;
+    //             for (auto &course : s.courses) {
+    //                 totalGrade += course.grade * course.credits;
+    //                 totalCredits += course.credits;
+    //             }
+    //             s.gpa = (totalCredits > 0) ? (totalGrade / totalCredits) : 0;
+
+    //             cout << "\nCourses added successfully!\n";
+    //             return;
+    //         }
+    //     }
+    //     cout << "Student not found!\n";
+    // }
+    //update added uh editing options
+    void addCourse() {
+    string id;
+    cout << "Enter student ID: "; cin >> id;
+
+    for (auto &s : students) {
+        if (s.studentID == id) {
+            int choice;
+            do {
+                cout << "\n1. Add New Course\n2. Edit Existing Course\n3. Delete Course\n4. Go Back\nOption: ";
+                
+                while (!(cin >> choice) || choice < 1 || choice > 4) {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "Invalid input! Please enter a number between 1 and 4: ";
                 }
 
-                for (int i = 0; i < numCourses; i++) {
-                    Course c;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                if (choice == 1) { // Add course 
+                    int numCourses;
+                    cout << "How many courses do you want to add? ";
+
+                    while (!(cin >> numCourses) || numCourses <= 0) {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        cout << "Invalid number! Please try again: ";
+                    }
+
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    
-                    cout << "\nEnter course #" << (i + 1) << " name: "; 
-                    getline(cin, c.name);
-                    
-                    cout << "Enter credits (vahed dars): ";
-                    while (!(cin >> c.credits) || c.credits <= 0) {
-                        cin.clear();
+
+                    for (int i = 0; i < numCourses; i++) {
+                        Course c;
+                        cout << "\nEnter course #" << (i + 1) << " name: ";
+                        getline(cin, c.name);
+
+                        cout << "Enter credits (vahed dars): ";
+                        while (!(cin >> c.credits) || c.credits <= 0) {
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            cout << "Invalid credits! Please enter a positive number: ";
+                        }
+
+                        cout << "Enter grade: ";
+                        while (!(cin >> c.grade) || c.grade < 0 || c.grade > 20) {
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            cout << "Invalid ! Please enter a value between 0 and 20: ";
+                        }
+
                         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                        cout << "Invalid credits! Please enter a positive integer: ";
+                        s.courses.push_back(c);
+                    }
+                } 
+                else if (choice == 2) { // Edit Existing Course
+                    if (s.courses.empty()) {
+                        cout << "No courses to edit!\n";
+                        continue;
                     }
 
-                    cout << "Enter grade: ";
-                    while (!(cin >> c.grade) || c.grade < 0 || c.grade > 20) { 
-                        cin.clear();
-                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                        cout << "Invalid grade! Please enter a value between 0 and 20: ";
+                    cout << "Existing Courses:\n";
+                    for (size_t i = 0; i < s.courses.size(); i++) {
+                        cout << i + 1 << ". " << s.courses[i].name << " (" << s.courses[i].credits << " credits) | Grade: " << s.courses[i].grade << "\n";
                     }
 
-                    s.courses.push_back(c);
+                    int courseIndex;
+                    cout << "Enter course number to edit: ";
+                    while (!(cin >> courseIndex) || courseIndex < 1 || courseIndex > s.courses.size()) {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        cout << "Invalid ! Enter a valid course number: ";
+                    }
+
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                    Course &c = s.courses[courseIndex - 1];
+                    cout << "Editing... " << c.name << "\n";
+
+                    cout << "Enter new course name (press Enter to keep: " << c.name << "): ";
+                    string newName;
+                    getline(cin, newName);
+                    if (!newName.empty()) c.name = newName;
+
+                    cout << "Enter new credits (or 0 to keep " << c.credits << "): ";
+                    int newCredits;
+                    while (!(cin >> newCredits) || newCredits < 0) {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        cout << "Invalid! Enter a positive number: ";
+                    }
+                    if (newCredits > 0) c.credits = newCredits;
+
+                    cout << "Enter new grade (or -1 to keep " << c.grade << "): ";
+                    float newGrade;
+                    while (!(cin >> newGrade) || (newGrade < -1 || newGrade > 20)) {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        cout << "Invalid! Enter a number between 0 and 20 (-1 if you wnna keep it): ";
+                    }
+                    if (newGrade >= 0) c.grade = newGrade;
+
+                } 
+                else if (choice == 3) { 
+                    if (s.courses.empty()) {
+                        cout << "Nothing found to delete!\n";
+                        continue;
+                    }
+
+                    cout << "Current Courses:\n";
+                    for (size_t i = 0; i < s.courses.size(); i++) {
+                        cout << i + 1 << ". " << s.courses[i].name << " (" << s.courses[i].credits << " credits) | Grade: " << s.courses[i].grade << "\n";
+                    }
+
+                    int courseIndex;
+                    cout << "Enter course number to delete: ";
+                    while (!(cin >> courseIndex) || courseIndex < 1 || courseIndex > s.courses.size()) {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                        cout << "Invalid! Try again.. ";
+                    }
+
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    s.courses.erase(s.courses.begin() + (courseIndex - 1));
+                    cout << "Course Deleted!\n";
                 }
 
                 float totalGrade = 0, totalCredits = 0;
@@ -181,12 +321,13 @@
                 }
                 s.gpa = (totalCredits > 0) ? (totalGrade / totalCredits) : 0;
 
-                cout << "\nCourses added successfully!\n";
-                return;
-            }
+            } while (choice != 4);
+            return;
         }
-        cout << "Student not found!\n";
     }
+    cout << "Student not found!\n";
+    }
+
 
 
     /*************************************************************************** */
@@ -287,4 +428,54 @@
         cout << "No matching student found!\n";
     }
 }
+
+/****************************************************************************************** */
+//update added new function for the uhhh extra thingies scores
+
+void editStudentInfo() {
+    string id;
+    cout << "Enter student ID to edit: ";
+    cin >> id;
+
+    for (int i = 0; i < students.size(); i++) {
+        if (students[i].studentID == id) {
+            cout << "Editing Student: " << students[i].firstName << " " << students[i].lastName << "\n";
+
+            string input;
+            cout << "Enter new first name (or press Enter to keep the same): ";
+            cin.ignore();
+            getline(cin, input);
+            if (input != "") {
+                students[i].firstName = input;
+            }
+
+            cout << "Enter new last name (or press Enter to keep the same): ";
+            getline(cin, input);
+
+            if (input != "") {
+                students[i].lastName = input;
+            }
+
+            cout << "Enter new student ID (or press Enter to keep the same): ";
+            getline(cin, input);
+
+            if (input != "") {
+                students[i].studentID = input;
+            }
+
+            cout << "Enter new major (or press Enter to keep the same): ";
+            getline(cin, input);
+
+            if (input != "") {
+                students[i].major = input;
+            }
+
+            cout << "Student info updated!\n";
+            return;
+        }
+    }
+
+    cout << "Student not found!\n";
+}
+
 
